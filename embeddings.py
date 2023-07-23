@@ -9,6 +9,16 @@ logger = logging.getLogger(__name__)
 logger.setLevel(LOG_LEVEL)
 pinecone.init(api_key=os.getenv('PINECONE_API_KEY'), environment=os.getenv('PINECONE_ENV'))
 
+
+def load_embeddings(index_name:str) -> Pinecone:
+    embeddings = OpenAIEmbeddings()
+
+    if index_name in pinecone.list_indexes():
+         return Pinecone.from_existing_index(index_name, embeddings)
+    else:
+        raise Exception(f"index {index_name} not found in Pinecone")
+    
+
 #If index does not exist, create, else load embeddings from existing index
 def insert_or_fetch_embeddings(index_name:str, chunks:list[Document], reset_index=False):
     embeddings = OpenAIEmbeddings()
