@@ -1,19 +1,29 @@
-import config
-from document_loaders import load_document
-from chunking import chunk_data
 from langchain.schema import Document
-from embeddings import *
-import simple_chat
-import qa_chat
 from langchain.callbacks.base import BaseCallbackHandler
-
 import os, re, sys
 import logging
 
+os.environ['APP_ROOT_PATH'] = os.getcwd()
+logging.basicConfig(level=config.LOG_LEVEL)
+
+import config.config as config
+from embeddings.pinecone import *
+#from embeddings.chroma import *
+from chat import simple_chat, qa_chat
+from document_load.document_loaders import load_document
+from document_load.chunking import chunk_data
+
+"""
+'Truque' para ajudar a busca vetorial a associar o interlocutor/usuário com o consorciado no contrato,
+e termos como 'empresa', 'vocês', 'servopa', com administradora, pois esses termos são centrais a todos
+os conceitos dentro do contrato.
+
+TODO - Fazer a substituição pelo prompt, pedindo para o LLM. (Não fiz ainda pois ele gerará substituições no histórico também)
+"""
 def improve_question(question):
     question = re.sub(r'eu', 'eu, o consorciado, ', question, flags=re.IGNORECASE)
-    question = re.sub(r'servopa', 'ADMINISTRADORA', question, flags=re.IGNORECASE)
-    question = re.sub(r'voc[êe]s', 'ADMINISTRADORA', question, flags=re.IGNORECASE)
+    question = re.sub(r'servopa', 'Administradora', question, flags=re.IGNORECASE)
+    question = re.sub(r'voc[êe]s', 'Administradora', question, flags=re.IGNORECASE)
     return question
 
 #Callback handler de stream - plugar na GUI do streamlit depois
@@ -23,7 +33,7 @@ class MyCustomHandler(BaseCallbackHandler):
 
 
 def chat_no_history(vector_store):
-    chain = simple_chat.get_conversation_chain(vector_store, 10)
+    chain = simple_chat.get_conversation_chain(vector_store, config.EMBEDDINGS_TOP_K_RESULTS)
 
     while True:
         question = input("Enter question: ")
@@ -40,7 +50,7 @@ def chat_no_history(vector_store):
         print(answer)
 
 def chat_qa(vector_store):
-    chain = qa_chat.get_conversation_chain(vector_store, 10)
+    chain = qa_chat.get_conversation_chain(vector_store, config.EMBEDDINGS_TOP_K_RESULTS)
     chat_history = []
 
     while True:
@@ -62,9 +72,9 @@ def main(load_doc_to_vector_store=False, no_history = False):
     if load_doc_to_vector_store:
         file_path = os.path.join('data', 'CONTRATO.pdf')
         pages:list[Document] = load_document(file_path)
-        chunks:list[Document] = chunk_data(pages, chunk_size=256, overlap=24)
+        chunks:list[Document] = chunk_data(pages) #Using defaults from config
 
-        vector_store = insert_or_fetch_embeddings(config.EMBEDDING_INDEX_NAME, chunks, reset_index=False)
+        vector_store = insert_or_fetch_embeddings(config.EMBEDDING_INDEX_NAME, chunks, reset_index=True)
     else:
         vector_store = load_embeddings(config.EMBEDDING_INDEX_NAME)
 
@@ -75,12 +85,11 @@ def main(load_doc_to_vector_store=False, no_history = False):
 
 
 if __name__ == "__main__":
-    logging.basicConfig(level=config.LOG_LEVEL)
-
+    
     count_args = len(sys.argv)
 
-    load_to_vector_store =  True if count_args > 1 and sys.argv[1] == 'reload_vectors' else False
-    no_history = True if  count_args > 2 and sys.argv[2] == 'nohistory' else False
+    load_to_vector_store = True if count_args > 1 and 'reload_vectors' in sys.argv else False
+    no_history = True if count_args > 1 and 'nohistory' in sys.argv else False
 
     main(load_to_vector_store, no_history)
     

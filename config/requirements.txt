@@ -1,0 +1,14 @@
+openai
+langchain
+pinecone-client
+python-dotenv
+tiktoken
+matplotlib
+plotly
+pandas
+numpy
+scipy
+sklearn
+scikit-learn
+pypdf
+docx2txt
