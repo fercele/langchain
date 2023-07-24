@@ -2,6 +2,7 @@ import os, logging
 from dotenv import load_dotenv, find_dotenv
 load_dotenv(find_dotenv(), override=True)
 
+logging.basicConfig()
 #Logger para a chave secreta
 config_logger = logging.getLogger(__name__)
 config_logger.setLevel(logging.INFO)
@@ -33,10 +34,11 @@ def generate_api_key(length=64):
     api_key = ''.join(secrets.choice(alphabet) for _ in range(length))
     return api_key
 
-random_api_key = generate_api_key()
-os.environ['TEMP_SECRET'] = random_api_key
-config_logger.info("TEMP_SECRET: %s", random_api_key)
-
 #A CADA START DA APLICAÇÃO, GERA UMA NOVA CHAVE TEMPORÁRIA E SETA COMO VARIÁVEL DE AMBIENTE
 #A CADA DEMONSTRAÇÃO, SUBIR A APLICAÇÃO, OLHAR A CHAVE NO LOG, E USÁ-LA NOS TESTES OU FORNECER A QUEM FOR TESTAR
-generate_api_key()
+if os.getenv('TEMP_SECRET') is None:
+    random_api_key = generate_api_key()
+    os.environ['TEMP_SECRET'] = random_api_key
+    config_logger.info("TEMP_SECRET: %s", random_api_key)
+
+

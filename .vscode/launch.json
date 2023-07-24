@@ -11,7 +11,23 @@
             "program": "${file}",
             "console": "integratedTerminal",
             "justMyCode": true,
-            "args": ["reload_vectors"]
+            "args": []
+        },
+        {
+            "name": "Python: Streamlit",
+            "type": "python",
+            "request": "launch",
+            "module": "streamlit",
+            "env": {
+                "STREAMLIT_APP": "streamlit_gui.py",
+                "STREAMLIT_ENV": "development",
+                "PYTHONPATH": "${workspaceRoot}/src",
+            },
+            "args": [
+                "run",
+                "/home/celestino_wsl/dev/python/ai/curso_langchain/vsc_workspace/streamlit_gui.py"
+            ],
+            "jinja": true
         }
     ]
 }

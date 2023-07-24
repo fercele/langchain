@@ -1,36 +1,17 @@
 from langchain.schema import Document
-from langchain.callbacks.base import BaseCallbackHandler
-import os, re, sys
+import os, sys
 import logging
 
 os.environ['APP_ROOT_PATH'] = os.getcwd()
 logging.basicConfig(level=config.LOG_LEVEL)
 
 import config.config as config
+import util
 from embeddings.pinecone import *
 #from embeddings.chroma import *
 from chat import simple_chat, qa_chat
 from document_load.document_loaders import load_document
 from document_load.chunking import chunk_data
-
-"""
-'Truque' para ajudar a busca vetorial a associar o interlocutor/usuário com o consorciado no contrato,
-e termos como 'empresa', 'vocês', 'servopa', com administradora, pois esses termos são centrais a todos
-os conceitos dentro do contrato.
-
-TODO - Fazer a substituição pelo prompt, pedindo para o LLM. (Não fiz ainda pois ele gerará substituições no histórico também)
-"""
-def improve_question(question):
-    question = re.sub(r'eu', 'eu, o consorciado, ', question, flags=re.IGNORECASE)
-    question = re.sub(r'servopa', 'Administradora', question, flags=re.IGNORECASE)
-    question = re.sub(r'voc[êe]s', 'Administradora', question, flags=re.IGNORECASE)
-    return question
-
-#Callback handler de stream - plugar na GUI do streamlit depois
-class MyCustomHandler(BaseCallbackHandler):
-    def on_llm_new_token(self, token: str, **kwargs) -> None:
-        print(f"{token}")
-
 
 def chat_no_history(vector_store):
     chain = simple_chat.get_conversation_chain(vector_store, config.EMBEDDINGS_TOP_K_RESULTS)
@@ -42,7 +23,7 @@ def chat_no_history(vector_store):
             break
 
         #Necessário forçar essas palavras chave na busca vetorial
-        question = improve_question(question)
+        question = util.improve_question(question)
 
         print("Asking LLM...")
         answer = simple_chat.ask_question(chain, question)
@@ -60,7 +41,7 @@ def chat_qa(vector_store):
             break
 
         #Necessário forçar essas palavras chave na busca vetorial
-        question = improve_question(question)
+        question = util.improve_question(question)
 
         print("Asking LLM...")
         qa_chat.ask_question(chain, question, chat_history)
