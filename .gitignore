@@ -2,3 +2,5 @@
 *.docx
 *.pdf
 .env
+.sqlite3
+.bin
