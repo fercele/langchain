@@ -2,10 +2,11 @@ from langchain.schema import Document
 import os, sys
 import logging
 
+import config.config as config
+
 os.environ['APP_ROOT_PATH'] = os.getcwd()
 logging.basicConfig(level=config.LOG_LEVEL)
 
-import config.config as config
 import util
 from embeddings.pinecone import *
 #from embeddings.chroma import *
