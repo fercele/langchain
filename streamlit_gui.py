@@ -93,7 +93,7 @@ def chat() -> str:
 def main():
     try:
         st.image(os.path.join(ROOT_PATH, 'assets', 'header-logo.png'))
-        st.subheader('Prova de Conceito Victoria :books:')
+        st.subheader('Prova de Conceito VictorIA :books:')
 
         with st.sidebar:
             api_key = st.text_input('Chave Temporária:', type='password', key='USER_SECRET')
