@@ -8,7 +8,7 @@ config_logger = logging.getLogger(__name__)
 config_logger.setLevel(logging.INFO)
 
 #Nivel de log para toda a aplicação, inclusive bibliotecas da OpenAI, LangChain, etc.
-LOG_LEVEL = logging.INFO
+LOG_LEVEL = logging.DEBUG
 
 EMBEDDING_INDEX_NAME = 'ask-a-document'
 EMBEDDING_DIMENSION = 1536

@@ -90,10 +90,19 @@ def chat() -> str:
     except AcessoNegadoException as e:
         st.error("Acesso negado. Verifique a Chave Temporária digitada.")
 
+
+if 'question_changed' not in st.session_state:
+    logger.debug("initializing question_changed to false")
+    st.session_state['question_changed'] = False
+
+def on_question_change():
+    st.session_state['question_changed'] = True
+    logger.debug(f"on_question_change {st.session_state.get('question_changed')}")
+
 def main():
+    logger.debug(f"main {st.session_state.get('question_changed')}")
+
     try:
-        st.image(os.path.join(ROOT_PATH, 'assets', 'header-logo.png'))
-        st.subheader('Prova de Conceito VictorIA :books:')
 
         with st.sidebar:
             api_key = st.text_input('Chave Temporária:', type='password', key='USER_SECRET')
@@ -105,7 +114,17 @@ def main():
                 callback_handler.reset_container(None)
                 st.session_state['question'] = ''
 
-        question = st.text_input(label='Sua Pergunta', key='question')
+        left, right = st.columns([0.7, 0.3])
+        with left:
+            st.image(os.path.join(ROOT_PATH, 'assets', 'header-logo.png'))
+        with right:
+             #header_file = 'otimizai_logo_preto.jpeg' if dark_mode else 'otimizai_logo_branco.jpeg'
+             header_file = 'otimizai_logo_branco.jpeg'
+             st.image(image=os.path.join(ROOT_PATH, 'assets', header_file), use_column_width=True)
+       
+        st.subheader('Prova de Conceito VictorIA :books:')
+
+        question = st.text_input(label='Sua Pergunta', key='question', on_change=on_question_change)
         ask_button = st.button("Enviar")
 
         #st.markdown("### streaming box")
@@ -123,7 +142,9 @@ def main():
 
         #st.markdown("### together box")
 
-        if question and ask_button:
+        if st.session_state.get('question_changed') or ask_button:
+            logger.debug("Resetting question_changed to false")
+            st.session_state['question_changed'] = False #Reseta o flag de alteração na pergunta
             answer = chat()
             #print()
 
