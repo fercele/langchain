@@ -57,7 +57,7 @@ def ask_question(qa_chain:ConversationalRetrievalChain, query:str, chat_history 
     history_length = len(chat_history)
     start_index =  (history_length - HISTORY_MAX_LENGTH) if (history_length > HISTORY_MAX_LENGTH) else 0
 
-    print(f"enviando histórico da msg [{start_index}] até o fim da history")
+    #print(f"enviando histórico da msg [{start_index}] até o fim da history")
     result = qa_chain({"question": query, "chat_history": chat_history[start_index : ]})
     answer = result["answer"]
     chat_history.append((query,answer))
