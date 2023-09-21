@@ -8,6 +8,10 @@ from config.config import EMBEDDING_DIMENSION, EMBEDDING_METRIC, LOG_LEVEL
 
 logger = logging.getLogger(__name__)
 logger.setLevel(LOG_LEVEL)
+
+print("Pinecone API Key: ", os.getenv('PINECONE_API_KEY'))
+print("Pinecone Environment: ", os.getenv('PINECONE_ENV'))
+
 pinecone.init(api_key=os.getenv('PINECONE_API_KEY'), environment=os.getenv('PINECONE_ENV'))
 
 
@@ -15,6 +19,7 @@ def load_embeddings(index_name:str) -> VectorStore:
     embeddings = OpenAIEmbeddings()
 
     if index_name in pinecone.list_indexes():
+         print("Carregando embeddings do index ", index_name)
          return Pinecone.from_existing_index(index_name, embeddings)
     else:
         raise Exception(f"index {index_name} not found in Pinecone")

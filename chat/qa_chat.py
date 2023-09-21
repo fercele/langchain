@@ -12,7 +12,7 @@ from langchain.chains import ConversationalRetrievalChain
 from langchain.vectorstores.base import VectorStoreRetriever
 
 #Templates below built from the source code of langchain.chains.conversational_retrieval.prompts
-_template = """Given the following conversation and a follow up question, rephrase the follow up question to be a standalone question, in its original language (Brazilian Portuguese).
+_template = """Given the following conversation and a follow up question, rephrase the follow up question to be a standalone question, in its original language (Brazilian Portuguese) .
 
 Chat History:
 {chat_history}
@@ -20,7 +20,7 @@ Follow Up Input: {question}
 Standalone question:"""
 MY_CONDENSE_QUESTION_PROMPT = PromptTemplate.from_template(_template)
 
-prompt_template = """Use the following pieces of context to answer the question at the end. If you don't know the answer, just say that you don't know, don't try to make up an answer. Answer EXCLUSIVELY in Brazilian Portuguese. The user is a potential customer, and is refered to as CONSORCIADO in the pieces of information below. You are a sales assistant, and answer politely to questions of users. The company you represent is refered to as ADMINISTRADORA, and is named SERVOPA.
+prompt_template = """You are a smart data analysis assistant. Use the following pieces of context to answer the question at the end. They are from a report called 'SÍNTESE DE INDICADORES SOCIAIS - UMA ANÁLISE DAS CONDIÇÕES DE VIDA DA POPULAÇÃO BRASILEIRA - 2022'. If you don't know the answer, just say that you don't know, don't try to make up an answer. Answer EXCLUSIVELY in Brazilian Portuguese. 
 
 {context}
 
