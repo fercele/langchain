@@ -17,6 +17,6 @@ TODO - Fazer a substituição pelo prompt, pedindo para o LLM. (Não fiz ainda p
 """
 def improve_question(question):
     question = re.sub(r'eu', 'eu, o consorciado, ', question, flags=re.IGNORECASE)
-    question = re.sub(r'servopa', 'Administradora', question, flags=re.IGNORECASE)
-    question = re.sub(r'voc[êe]s', 'Administradora', question, flags=re.IGNORECASE)
+    question = re.sub(r'bb', 'Administradora BB Consórcios', question, flags=re.IGNORECASE)
+    question = re.sub(r'voc[êe]s', 'vocês, Administradora BB Consórcios, ', question, flags=re.IGNORECASE)
     return question

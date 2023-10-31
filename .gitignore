@@ -5,3 +5,4 @@
 .sqlite3
 .bin
 *.csv
+dados/*

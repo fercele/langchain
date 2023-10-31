@@ -78,7 +78,7 @@ def chat() -> str:
         question = st.session_state['question']
 
         #Necessário forçar essas palavras chave na busca vetorial
-        # question = util.improve_question(question)
+        question = util.improve_question(question)
 
         answer = qa_chat.ask_question(chain, question, chat_history)
         
@@ -116,13 +116,13 @@ def main():
 
     left, right = st.columns([0.7, 0.3])
     with left:
-        st.image(os.path.join(ROOT_PATH, 'assets', 'header-logo.png'))
+        st.image(image=os.path.join(ROOT_PATH, 'assets', 'header-logo.png'), width=100)
     with right:
             header_file = 'otimizai_logo_preto.png' if dark_mode else 'otimizai_logo_branco.png'
             #header_file = 'otimizai_logo_branco.jpeg'
             st.image(image=os.path.join(ROOT_PATH, 'assets', header_file), use_column_width=True)
     
-    st.subheader('Demonstração - Chat com Relatório do IBGE :books:')
+    st.subheader('Demonstração - Chat com Contrato de Consórcio :books:')
 
     question = st.text_input(label='Sua Pergunta', key='question', on_change=on_question_change)
     ask_button = st.button("Enviar")

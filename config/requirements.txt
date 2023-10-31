@@ -1,14 +1,7 @@
+python-dotenv
 openai
 langchain
-pinecone-client
-python-dotenv
 tiktoken
-matplotlib
-plotly
-pandas
-numpy
-scipy
-sklearn
-scikit-learn
-pypdf
-docx2txt
+#Para funcionar no WSL ubuntu com python 3.11 fazer antes:"sudo apt-get install python3.11-dev
+redis[hiredis]
+streamlit

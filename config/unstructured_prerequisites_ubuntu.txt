@@ -1,0 +1,8 @@
+sudo apt-get update
+sudo apt-get -y install libmagic-dev
+sudo apt-get -y install tesseract-ocr
+sudo apt-get install tesseract-ocr-por
+# Pra ver se deu certo
+tesseract --list-langs
+sudo apt-get install -y libreoffice-core-nogui
+sudo apt-get install -y pandoc
